@@ -8,12 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		964104BE1C2F46ED00D2E9B9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964104BD1C2F46ED00D2E9B9 /* AppDelegate.swift */; };
-		964104C01C2F46ED00D2E9B9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964104BF1C2F46ED00D2E9B9 /* ViewController.swift */; };
+		964104C01C2F46ED00D2E9B9 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964104BF1C2F46ED00D2E9B9 /* MainViewController.swift */; };
 		964104C31C2F46ED00D2E9B9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 964104C11C2F46ED00D2E9B9 /* Main.storyboard */; };
 		964104C51C2F46ED00D2E9B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 964104C41C2F46ED00D2E9B9 /* Assets.xcassets */; };
 		964104C81C2F46ED00D2E9B9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 964104C61C2F46ED00D2E9B9 /* LaunchScreen.storyboard */; };
 		964104D31C2F46ED00D2E9B9 /* MVVMTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964104D21C2F46ED00D2E9B9 /* MVVMTestTests.swift */; };
 		964104DE1C2F46ED00D2E9B9 /* MVVMTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964104DD1C2F46ED00D2E9B9 /* MVVMTestUITests.swift */; };
+		964104EC1C2F50CB00D2E9B9 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964104EB1C2F50CB00D2E9B9 /* MainViewModel.swift */; };
+		964104EE1C2F50FD00D2E9B9 /* NotifyPropertyChangedProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964104ED1C2F50FD00D2E9B9 /* NotifyPropertyChangedProtocol.swift */; };
+		96A316C21C2FE55D0097C50F /* BaseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A316C11C2FE55D0097C50F /* BaseViewModel.swift */; };
+		96A316C61C2FE6180097C50F /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A316C51C2FE6180097C50F /* BaseViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +40,7 @@
 /* Begin PBXFileReference section */
 		964104BA1C2F46ED00D2E9B9 /* MVVMTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MVVMTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		964104BD1C2F46ED00D2E9B9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		964104BF1C2F46ED00D2E9B9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		964104BF1C2F46ED00D2E9B9 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		964104C21C2F46ED00D2E9B9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		964104C41C2F46ED00D2E9B9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		964104C71C2F46ED00D2E9B9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -47,6 +51,10 @@
 		964104D91C2F46ED00D2E9B9 /* MVVMTestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MVVMTestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		964104DD1C2F46ED00D2E9B9 /* MVVMTestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVVMTestUITests.swift; sourceTree = "<group>"; };
 		964104DF1C2F46ED00D2E9B9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		964104EB1C2F50CB00D2E9B9 /* MainViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		964104ED1C2F50FD00D2E9B9 /* NotifyPropertyChangedProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotifyPropertyChangedProtocol.swift; sourceTree = "<group>"; };
+		96A316C11C2FE55D0097C50F /* BaseViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewModel.swift; sourceTree = "<group>"; };
+		96A316C51C2FE6180097C50F /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,8 +106,9 @@
 			isa = PBXGroup;
 			children = (
 				964104BD1C2F46ED00D2E9B9 /* AppDelegate.swift */,
-				964104BF1C2F46ED00D2E9B9 /* ViewController.swift */,
-				964104C11C2F46ED00D2E9B9 /* Main.storyboard */,
+				9645284C1C2FF8460027C5B8 /* MVVMFramework */,
+				96A316C31C2FE5C90097C50F /* ViewModels */,
+				96A316C41C2FE5D50097C50F /* Views */,
 				964104C41C2F46ED00D2E9B9 /* Assets.xcassets */,
 				964104C61C2F46ED00D2E9B9 /* LaunchScreen.storyboard */,
 				964104C91C2F46ED00D2E9B9 /* Info.plist */,
@@ -123,6 +132,33 @@
 				964104DF1C2F46ED00D2E9B9 /* Info.plist */,
 			);
 			path = MVVMTestUITests;
+			sourceTree = "<group>";
+		};
+		9645284C1C2FF8460027C5B8 /* MVVMFramework */ = {
+			isa = PBXGroup;
+			children = (
+				96A316C11C2FE55D0097C50F /* BaseViewModel.swift */,
+				96A316C51C2FE6180097C50F /* BaseViewController.swift */,
+				964104ED1C2F50FD00D2E9B9 /* NotifyPropertyChangedProtocol.swift */,
+			);
+			name = MVVMFramework;
+			sourceTree = "<group>";
+		};
+		96A316C31C2FE5C90097C50F /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				964104EB1C2F50CB00D2E9B9 /* MainViewModel.swift */,
+			);
+			name = ViewModels;
+			sourceTree = "<group>";
+		};
+		96A316C41C2FE5D50097C50F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				964104BF1C2F46ED00D2E9B9 /* MainViewController.swift */,
+				964104C11C2F46ED00D2E9B9 /* Main.storyboard */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -256,8 +292,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				964104C01C2F46ED00D2E9B9 /* ViewController.swift in Sources */,
+				964104EE1C2F50FD00D2E9B9 /* NotifyPropertyChangedProtocol.swift in Sources */,
+				96A316C21C2FE55D0097C50F /* BaseViewModel.swift in Sources */,
+				964104C01C2F46ED00D2E9B9 /* MainViewController.swift in Sources */,
 				964104BE1C2F46ED00D2E9B9 /* AppDelegate.swift in Sources */,
+				964104EC1C2F50CB00D2E9B9 /* MainViewModel.swift in Sources */,
+				96A316C61C2FE6180097C50F /* BaseViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,6 +440,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = MVVMTest/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = tw.com.bosian.MVVMTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -411,6 +452,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = MVVMTest/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = tw.com.bosian.MVVMTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -484,6 +526,7 @@
 				964104E41C2F46ED00D2E9B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		964104E51C2F46ED00D2E9B9 /* Build configuration list for PBXNativeTarget "MVVMTestTests" */ = {
 			isa = XCConfigurationList;
@@ -492,6 +535,7 @@
 				964104E71C2F46ED00D2E9B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		964104E81C2F46ED00D2E9B9 /* Build configuration list for PBXNativeTarget "MVVMTestUITests" */ = {
 			isa = XCConfigurationList;
@@ -500,6 +544,7 @@
 				964104EA1C2F46ED00D2E9B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
