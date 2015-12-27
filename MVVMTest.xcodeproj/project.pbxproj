@@ -18,6 +18,8 @@
 		964104EE1C2F50FD00D2E9B9 /* NotifyPropertyChangedProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964104ED1C2F50FD00D2E9B9 /* NotifyPropertyChangedProtocol.swift */; };
 		96A316C21C2FE55D0097C50F /* BaseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A316C11C2FE55D0097C50F /* BaseViewModel.swift */; };
 		96A316C61C2FE6180097C50F /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A316C51C2FE6180097C50F /* BaseViewController.swift */; };
+		96C33E2C1C303C5B008645EA /* ObservableCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C33E2B1C303C5B008645EA /* ObservableCollection.swift */; };
+		96C33E2E1C303E4E008645EA /* CollectionChangedProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C33E2D1C303E4E008645EA /* CollectionChangedProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,8 @@
 		964104ED1C2F50FD00D2E9B9 /* NotifyPropertyChangedProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotifyPropertyChangedProtocol.swift; sourceTree = "<group>"; };
 		96A316C11C2FE55D0097C50F /* BaseViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewModel.swift; sourceTree = "<group>"; };
 		96A316C51C2FE6180097C50F /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		96C33E2B1C303C5B008645EA /* ObservableCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObservableCollection.swift; sourceTree = "<group>"; };
+		96C33E2D1C303E4E008645EA /* CollectionChangedProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionChangedProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +144,7 @@
 				96A316C11C2FE55D0097C50F /* BaseViewModel.swift */,
 				96A316C51C2FE6180097C50F /* BaseViewController.swift */,
 				964104ED1C2F50FD00D2E9B9 /* NotifyPropertyChangedProtocol.swift */,
+				96C33E2F1C303E55008645EA /* CollectionProtocols */,
 			);
 			name = MVVMFramework;
 			sourceTree = "<group>";
@@ -159,6 +164,15 @@
 				964104C11C2F46ED00D2E9B9 /* Main.storyboard */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		96C33E2F1C303E55008645EA /* CollectionProtocols */ = {
+			isa = PBXGroup;
+			children = (
+				96C33E2B1C303C5B008645EA /* ObservableCollection.swift */,
+				96C33E2D1C303E4E008645EA /* CollectionChangedProtocol.swift */,
+			);
+			name = CollectionProtocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -293,6 +307,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				964104EE1C2F50FD00D2E9B9 /* NotifyPropertyChangedProtocol.swift in Sources */,
+				96C33E2C1C303C5B008645EA /* ObservableCollection.swift in Sources */,
+				96C33E2E1C303E4E008645EA /* CollectionChangedProtocol.swift in Sources */,
 				96A316C21C2FE55D0097C50F /* BaseViewModel.swift in Sources */,
 				964104C01C2F46ED00D2E9B9 /* MainViewController.swift in Sources */,
 				964104BE1C2F46ED00D2E9B9 /* AppDelegate.swift in Sources */,

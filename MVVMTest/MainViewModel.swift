@@ -19,6 +19,29 @@ class MainViewModel: BaseViewModel{
                 notifyPropertyChanged("text")
             }
         }
+     }
+    
+    var dataItems: ObservableCollection<String> {
+        
+        didSet {
+            
+            if (dataItems != oldValue)
+            {
+                notifyPropertyChanged("dataItems")
+            }
+        }
+    }
+    
+    override init() {
+
+        self.dataItems = ObservableCollection<String>()
+
+        for var f = 0; f < 10; f++
+        {
+            self.dataItems.append(String(f))
+        }
+        
+        super.init()
     }
     
     func getDate() -> String!
@@ -31,10 +54,25 @@ class MainViewModel: BaseViewModel{
         return dateFormater.stringFromDate(date)
     }
 
-    // =============== View event =============== 
+    // =============== View event ===============
     
     func buttonHandler(sender: UIButton) {
         
         text = getDate()
+        
+    }
+    
+    func addItemHandler(sender: UIButton!)
+    {
+        let count = dataItems.count
+        
+        self.dataItems.append(String(count))
+    }
+    
+    func removeItemHandler(sender: UIButton!)
+    {
+        let index = dataItems.count - 1
+        
+        self.dataItems.removeAtIndex(index)
     }
 }

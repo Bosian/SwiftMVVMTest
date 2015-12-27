@@ -18,13 +18,12 @@ class BaseViewController: UIViewController {
             {
                 self.dataContext = newValue
                 
-                var viewModel = newValue as? NotifyPropertyChangedProtocol
-                
-                if viewModel != nil
+                if var viewModel = newValue as? NotifyPropertyChangedProtocol
                 {
-                    viewModel?.propertyChanged = updateViewFromViewModel
+                    viewModel.propertyChanged = updateViewFromViewModel
                 }
-                
+
+                updateAllViewWhenDataContextChanged()
             }
         }
     }
@@ -32,6 +31,11 @@ class BaseViewController: UIViewController {
     func updateViewFromViewModel(propertyName: String)
     {
         print("UpdateView: \(propertyName)")
+    }
+    
+    func updateAllViewWhenDataContextChanged()
+    {
+    
     }
     
 }
