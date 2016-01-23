@@ -10,12 +10,13 @@ import UIKit
 
 protocol CollectionChangedProtocol {
     
-    var collectionChanged: ((CollectionChangedAction, index: Int) -> Void)? { get set }
+    var collectionChanged: CollectionChange { get set }
     
     func notifyCollectionChanged(action: CollectionChangedAction, index: Int)
 }
 
 enum CollectionChangedAction {
-    case CollectionChangedActionAdd
-    case CollectionChangedActionDelete
+    case Add
+    case Delete
+    case Update
 }

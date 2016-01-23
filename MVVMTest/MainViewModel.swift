@@ -16,7 +16,7 @@ class MainViewModel: BaseViewModel{
             
             if (oldValue != text)
             {
-                notifyPropertyChanged("text")
+                notifyPropertyChanged()
             }
         }
      }
@@ -27,7 +27,7 @@ class MainViewModel: BaseViewModel{
             
             if (dataItems != oldValue)
             {
-                notifyPropertyChanged("dataItems")
+                notifyPropertyChanged()
             }
         }
     }

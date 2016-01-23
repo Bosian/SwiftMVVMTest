@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MainViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate {
+class MainViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var textField2: UITextField!
@@ -43,9 +43,7 @@ class MainViewController: BaseViewController, UITableViewDataSource, UITableView
                 break
             case "dataItems":
                 
-                if var collection = viewModel.dataItems as? CollectionChangedProtocol {
-                    collection.collectionChanged = collectionChanged
-                }
+                viewModel.dataItems.collectionChanged.append(self.tableView, method: collectionChanged)
                 
                 break
             default:
@@ -55,11 +53,21 @@ class MainViewController: BaseViewController, UITableViewDataSource, UITableView
     
     /**
      * When DataContext Changed then update all View
+     
      */
-    override func updateAllViewWhenDataContextChanged() {
+    override func updateAllViewWhenDataContextChanged(dataContext: AnyObject) {
         
-        updateViewFromViewModel("text")
-        updateViewFromViewModel("dataItems")
+        super.updateAllViewWhenDataContextChanged(dataContext)
+        
+        viewModel = dataContext as! MainViewModel
+        
+        let mirror = Mirror(reflecting: viewModel)
+        
+        // 更新ViewModel中對應到的View
+        for (label, _) in mirror.children
+        {
+            updateViewFromViewModel(label!)
+        }
     }
     
     /**

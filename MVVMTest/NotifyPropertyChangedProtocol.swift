@@ -6,11 +6,17 @@
 //  Copyright © 2015年 劉柏賢. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 protocol NotifyPropertyChangedProtocol
 {
-    var propertyChanged: ((String) -> Void)? { get set }
+    /**
+     * 給View註冊屬性變更
+     */
+    var propertyChanged: PropertyChange { get set }
     
+    /**
+     * 通知View，屬性變更
+     */
     func notifyPropertyChanged(propertyName: String)
 }

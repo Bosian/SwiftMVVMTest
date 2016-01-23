@@ -8,11 +8,12 @@
 
 import UIKit
 
+
 class ObservableCollection<T>: NSObject, CollectionChangedProtocol {
     
     private lazy var collection: [T] = [T]()
     
-    var collectionChanged: ((CollectionChangedAction, index: Int) -> Void)?
+    var collectionChanged = CollectionChange()
     
     var count: Int {
         return collection.count
@@ -29,7 +30,7 @@ class ObservableCollection<T>: NSObject, CollectionChangedProtocol {
         collection.append(item)
         
         let index = collection.count - 1
-        notifyCollectionChanged(CollectionChangedAction.CollectionChangedActionAdd, index: index)
+        notifyCollectionChanged(CollectionChangedAction.Add, index: index)
     }
     
     func removeAtIndex(index: Int)
@@ -41,18 +42,28 @@ class ObservableCollection<T>: NSObject, CollectionChangedProtocol {
         
         collection.removeAtIndex(index)
         
-        notifyCollectionChanged(CollectionChangedAction.CollectionChangedActionDelete, index: index)
+        notifyCollectionChanged(CollectionChangedAction.Delete, index: index)
     }
     
     func notifyCollectionChanged(action: CollectionChangedAction, index: Int)
     {
-        collectionChanged?(action, index: index)
-        
         print("\(action): \(index)")
+        
+        collectionChanged.invoke(action, index: index)
     }
     
     subscript(index: Int) -> T
     {
-        return collection[index]
+        get {
+            return collection[index]
+        }
+        
+        set {
+            
+            collection[index] = newValue
+            
+            notifyCollectionChanged(CollectionChangedAction.Update, index: index)
+        }
     }
+    
 }

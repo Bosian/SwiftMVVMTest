@@ -16,6 +16,12 @@
 		964104DE1C2F46ED00D2E9B9 /* MVVMTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964104DD1C2F46ED00D2E9B9 /* MVVMTestUITests.swift */; };
 		964104EC1C2F50CB00D2E9B9 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964104EB1C2F50CB00D2E9B9 /* MainViewModel.swift */; };
 		964104EE1C2F50FD00D2E9B9 /* NotifyPropertyChangedProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964104ED1C2F50FD00D2E9B9 /* NotifyPropertyChangedProtocol.swift */; };
+		9660B4B51C539BA4009326EE /* BaseBindable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660B4B41C539BA4009326EE /* BaseBindable.swift */; };
+		9660B4B71C539D6A009326EE /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660B4B61C539D6A009326EE /* BaseTableViewCell.swift */; };
+		9660B4B91C539E7D009326EE /* PropertyChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660B4B81C539E7D009326EE /* PropertyChange.swift */; };
+		9660B4BB1C539ED8009326EE /* CollectionChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660B4BA1C539ED8009326EE /* CollectionChange.swift */; };
+		9660B4BE1C539FFB009326EE /* BindableDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660B4BD1C539FFB009326EE /* BindableDelegate.swift */; };
+		9660B4C01C53A05D009326EE /* ValueConverterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660B4BF1C53A05D009326EE /* ValueConverterProtocol.swift */; };
 		96A316C21C2FE55D0097C50F /* BaseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A316C11C2FE55D0097C50F /* BaseViewModel.swift */; };
 		96A316C61C2FE6180097C50F /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A316C51C2FE6180097C50F /* BaseViewController.swift */; };
 		96C33E2C1C303C5B008645EA /* ObservableCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C33E2B1C303C5B008645EA /* ObservableCollection.swift */; };
@@ -55,6 +61,12 @@
 		964104DF1C2F46ED00D2E9B9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		964104EB1C2F50CB00D2E9B9 /* MainViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		964104ED1C2F50FD00D2E9B9 /* NotifyPropertyChangedProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotifyPropertyChangedProtocol.swift; sourceTree = "<group>"; };
+		9660B4B41C539BA4009326EE /* BaseBindable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseBindable.swift; sourceTree = "<group>"; };
+		9660B4B61C539D6A009326EE /* BaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
+		9660B4B81C539E7D009326EE /* PropertyChange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyChange.swift; sourceTree = "<group>"; };
+		9660B4BA1C539ED8009326EE /* CollectionChange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionChange.swift; sourceTree = "<group>"; };
+		9660B4BD1C539FFB009326EE /* BindableDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BindableDelegate.swift; sourceTree = "<group>"; };
+		9660B4BF1C53A05D009326EE /* ValueConverterProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueConverterProtocol.swift; sourceTree = "<group>"; };
 		96A316C11C2FE55D0097C50F /* BaseViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewModel.swift; sourceTree = "<group>"; };
 		96A316C51C2FE6180097C50F /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		96C33E2B1C303C5B008645EA /* ObservableCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObservableCollection.swift; sourceTree = "<group>"; };
@@ -141,12 +153,27 @@
 		9645284C1C2FF8460027C5B8 /* MVVMFramework */ = {
 			isa = PBXGroup;
 			children = (
+				9660B4B41C539BA4009326EE /* BaseBindable.swift */,
 				96A316C11C2FE55D0097C50F /* BaseViewModel.swift */,
+				9660B4B61C539D6A009326EE /* BaseTableViewCell.swift */,
 				96A316C51C2FE6180097C50F /* BaseViewController.swift */,
-				964104ED1C2F50FD00D2E9B9 /* NotifyPropertyChangedProtocol.swift */,
-				96C33E2F1C303E55008645EA /* CollectionProtocols */,
+				96C33E2B1C303C5B008645EA /* ObservableCollection.swift */,
+				9660B4B81C539E7D009326EE /* PropertyChange.swift */,
+				9660B4BA1C539ED8009326EE /* CollectionChange.swift */,
+				9660B4BC1C539F33009326EE /* Protocols */,
 			);
 			name = MVVMFramework;
+			sourceTree = "<group>";
+		};
+		9660B4BC1C539F33009326EE /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				964104ED1C2F50FD00D2E9B9 /* NotifyPropertyChangedProtocol.swift */,
+				96C33E2D1C303E4E008645EA /* CollectionChangedProtocol.swift */,
+				9660B4BD1C539FFB009326EE /* BindableDelegate.swift */,
+				9660B4BF1C53A05D009326EE /* ValueConverterProtocol.swift */,
+			);
+			name = Protocols;
 			sourceTree = "<group>";
 		};
 		96A316C31C2FE5C90097C50F /* ViewModels */ = {
@@ -164,15 +191,6 @@
 				964104C11C2F46ED00D2E9B9 /* Main.storyboard */,
 			);
 			name = Views;
-			sourceTree = "<group>";
-		};
-		96C33E2F1C303E55008645EA /* CollectionProtocols */ = {
-			isa = PBXGroup;
-			children = (
-				96C33E2B1C303C5B008645EA /* ObservableCollection.swift */,
-				96C33E2D1C303E4E008645EA /* CollectionChangedProtocol.swift */,
-			);
-			name = CollectionProtocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -311,9 +329,15 @@
 				96C33E2E1C303E4E008645EA /* CollectionChangedProtocol.swift in Sources */,
 				96A316C21C2FE55D0097C50F /* BaseViewModel.swift in Sources */,
 				964104C01C2F46ED00D2E9B9 /* MainViewController.swift in Sources */,
+				9660B4BE1C539FFB009326EE /* BindableDelegate.swift in Sources */,
+				9660B4C01C53A05D009326EE /* ValueConverterProtocol.swift in Sources */,
 				964104BE1C2F46ED00D2E9B9 /* AppDelegate.swift in Sources */,
 				964104EC1C2F50CB00D2E9B9 /* MainViewModel.swift in Sources */,
+				9660B4BB1C539ED8009326EE /* CollectionChange.swift in Sources */,
 				96A316C61C2FE6180097C50F /* BaseViewController.swift in Sources */,
+				9660B4B71C539D6A009326EE /* BaseTableViewCell.swift in Sources */,
+				9660B4B51C539BA4009326EE /* BaseBindable.swift in Sources */,
+				9660B4B91C539E7D009326EE /* PropertyChange.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

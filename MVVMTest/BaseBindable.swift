@@ -1,5 +1,5 @@
 //
-//  BaseViewModel.swift
+//  BaseBindable.swift
 //  MVVMTest
 //
 //  Created by 劉柏賢 on 2015/12/27.
@@ -8,8 +8,8 @@
 
 import UIKit
 
-class BaseViewModel: NSObject, NotifyPropertyChangedProtocol {
-    
+class BaseBindable: NSObject, NotifyPropertyChangedProtocol {
+
     /**
      * 是否正在更新
      */
@@ -24,41 +24,13 @@ class BaseViewModel: NSObject, NotifyPropertyChangedProtocol {
     /**
      * viewController
      */
-    var viewController: BaseViewController!
+    var viewController: AnyObject?
     
-    /**
-     * 給View註冊屬性變更
-     */
     var propertyChanged = PropertyChange()
     
-    /**
-     * 通知View，屬性變更
-     */
     func notifyPropertyChanged(propertyName: String = __FUNCTION__) {
         
         propertyChanged.invoke(propertyName)
-    }
-    
-    // === ViewController Event ===
-    
-    func viewDidLoad() {
-        
-    }
-    
-    func viewWillAppear(animated: Bool) {
-        
-    }
-    
-    func viewDidAppear(animated: Bool) {
-        
-    }
-    
-    func viewDidDisappear(animated: Bool) {
-        
-    }
-    
-    func didReceiveMemoryWarning() {
-        
     }
     
 }
