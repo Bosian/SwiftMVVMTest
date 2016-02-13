@@ -15,4 +15,6 @@ protocol BindableDelegate {
     func updateViewFromViewModel(propertyName: String)
     
     func updateAllViewWhenDataContextChanged(dataContext: AnyObject)
+    
+    func collectionChanged(view: UIView, action: CollectionChangedAction, index:Int)
 }

@@ -8,25 +8,11 @@
 
 import UIKit
 
-class MainViewModel: BaseViewModel{
-    
-    var text: String! {
-        
+class MainViewModel: BaseViewModel
+{
+    var dataItems = ObservableCollection<MainCellViewModel>() {
         didSet {
-            
-            if (oldValue != text)
-            {
-                notifyPropertyChanged()
-            }
-        }
-     }
-    
-    var dataItems: ObservableCollection<String> {
-        
-        didSet {
-            
-            if (dataItems != oldValue)
-            {
+            if (dataItems != oldValue) {
                 notifyPropertyChanged()
             }
         }
@@ -34,45 +20,27 @@ class MainViewModel: BaseViewModel{
     
     override init() {
 
-        self.dataItems = ObservableCollection<String>()
-
-        for var f = 0; f < 10; f++
+        let titleArray = ["OneTime Binding", "OneWay Binding With Converter", "TwoWay Binding"]
+        
+        let viewControllerArray =
+        [
+            NSStringFromClass(OneTimeViewController).componentsSeparatedByString(".").last,
+            NSStringFromClass(OneWayViewController).componentsSeparatedByString(".").last,
+            NSStringFromClass(TwoWayViewController).componentsSeparatedByString(".").last
+        ]
+        
+        
+        for var f = 0; f < titleArray.count; f++
         {
-            self.dataItems.append(String(f))
+            let itemViewModel = MainCellViewModel()
+            
+            itemViewModel.titleText = titleArray[f]
+            itemViewModel.navigation = viewControllerArray[f]
+            
+            self.dataItems.append(itemViewModel)
         }
         
         super.init()
     }
-    
-    func getDate() -> String!
-    {
-        let date = NSDate()
-        let dateFormater = NSDateFormatter()
-        dateFormater.locale = NSLocale.currentLocale()
-        dateFormater.dateFormat = "yyyy/MM/dd hh:mm:ss"
-        
-        return dateFormater.stringFromDate(date)
-    }
 
-    // =============== View event ===============
-    
-    func buttonHandler(sender: UIButton) {
-        
-        text = getDate()
-        
-    }
-    
-    func addItemHandler(sender: UIButton!)
-    {
-        let count = dataItems.count
-        
-        self.dataItems.append(String(count))
-    }
-    
-    func removeItemHandler(sender: UIButton!)
-    {
-        let index = dataItems.count - 1
-        
-        self.dataItems.removeAtIndex(index)
-    }
 }

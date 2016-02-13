@@ -24,7 +24,7 @@ class BaseViewModel: NSObject, NotifyPropertyChangedProtocol {
     /**
      * viewController
      */
-    var viewController: BaseViewController!
+    weak var viewController: BaseViewController!
     
     /**
      * 給View註冊屬性變更

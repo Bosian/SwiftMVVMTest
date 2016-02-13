@@ -3,10 +3,18 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "MainViewModel.dataItems.getter:MainViewModel.swift">
+         contextName = "ViewController.buttonHandler(UIButton) -&gt; ():ViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "_dataItems">
+               value = "viewModel.text">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "BaseViewController.updateViewFromViewModel(String) -&gt; ():BaseViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "viewModel">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -35,10 +43,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "ViewController.buttonHandler(UIButton) -&gt; ():ViewController.swift">
+         contextName = "MainViewModel.dataItems.getter:MainViewModel.swift">
          <PersistentStrings>
             <PersistentString
-               value = "viewModel.text">
+               value = "_dataItems">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

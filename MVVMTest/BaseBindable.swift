@@ -9,7 +9,7 @@
 import UIKit
 
 class BaseBindable: NSObject, NotifyPropertyChangedProtocol {
-
+    
     /**
      * 是否正在更新
      */
@@ -24,7 +24,7 @@ class BaseBindable: NSObject, NotifyPropertyChangedProtocol {
     /**
      * viewController
      */
-    var viewController: AnyObject?
+    weak var viewController: AnyObject?
     
     var propertyChanged = PropertyChange()
     

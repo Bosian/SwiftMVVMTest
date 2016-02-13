@@ -13,17 +13,20 @@ import UIKit
  */
 class CollectionChange
 {
-    typealias listener = (UITableView, action: CollectionChangedAction, index: Int) -> Void
+    typealias listener = (UIView, action: CollectionChangedAction, index: Int) -> Void
     
     private lazy var propertyChanged = [listener]()
     
     /**
      * 由於Swift 無法使用method type互相做比較，所以多傳入一個 instance進行比較
      */
-    private lazy var instanceArray = [UITableView]()
+    private lazy var instanceArray = [UIView?]()
     
-    func append(instance: UITableView, method receiver: listener)
+    func append(parameter: CollectionChangeParameter)
     {
+        let instance = parameter.view
+        let receiver = parameter.receiver
+        
         // 防止加入同一個instance
         guard instanceArray.indexOf({$0 === instance}) == nil else
         {
@@ -38,8 +41,10 @@ class CollectionChange
      * 移除註冊
      * 由於Swift 無法使用method type互相做比較，所以多傳入一個 instance進行比較
      */
-    func remove(instance: AnyObject, method: listener)
+    func remove(parameter: CollectionChangeParameter)
     {
+        let instance = parameter.view
+        
         if let index = instanceArray.indexOf({ $0 === instance})
         {
             instanceArray.removeAtIndex(index)
@@ -54,7 +59,37 @@ class CollectionChange
     {
         for (f, method) in propertyChanged.enumerate()
         {
-            method(instanceArray[f] , action: action, index: index)
+            guard let view = instanceArray[f] else {
+                continue
+            }
+            
+            method(view , action: action, index: index)
         }
     }
+}
+
+class CollectionChangeParameter : NSObject
+{
+    typealias listener = (UIView, action: CollectionChangedAction, index: Int) -> Void
+    
+    weak var view: UIView?
+    var receiver: listener
+    
+    init(view: UIView, method receiver: listener) {
+        
+        self.view = view
+        self.receiver = receiver
+        
+        super.init()
+    }
+}
+
+func += (inout left: CollectionChange, right: CollectionChangeParameter)
+{
+    left.append(right)
+}
+
+func -= (inout left: CollectionChange, right: CollectionChangeParameter)
+{
+    left.remove(right)
 }

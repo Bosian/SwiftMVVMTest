@@ -20,17 +20,20 @@ class PropertyChange
     /**
      * 由於Swift 無法使用method type互相做比較，所以多傳入一個 instance進行比較
      */
-    private lazy var instanceArray = [AnyObject]()
+    private lazy var instanceArray = [Weak<AnyObject>]()
     
-    func append(instance: AnyObject, method receiver: listener)
+    func append(parameter: PropertyChangeParameter)
     {
+        let instance = parameter.sender
+        let receiver = parameter.method
+        
         // 防止加入同一個instance
         guard instanceArray.indexOf({$0 === instance}) == nil else
         {
             return
         }
         
-        instanceArray.append(instance)
+        instanceArray.append(Weak<AnyObject>(value: instance))
         propertyChanged.append(receiver)
     }
     
@@ -38,8 +41,10 @@ class PropertyChange
      * 移除註冊
      * 由於Swift 無法使用method type互相做比較，所以多傳入一個 instance進行比較
      */
-    func remove(instance: AnyObject, method: listener)
+    func remove(parameter: PropertyChangeParameter)
     {
+        let instance = parameter.sender
+        
         if let index = instanceArray.indexOf({ $0 === instance})
         {
             instanceArray.removeAtIndex(index)
@@ -59,21 +64,38 @@ class PropertyChange
     }
 }
 
-
+/**
+ * PropertyChange 所需的傳入參數
+ */
+class PropertyChangeParameter : NSObject {
+    
+    typealias listener = (String) -> Void
+    
+    weak var sender: AnyObject?
+    var method: listener
+    
+    init(sender: AnyObject, method: listener) {
+        
+        self.sender = sender
+        self.method = method
+        
+        super.init()
+    }
+}
 
 /**
  * 使用 += 註冊 PropertyChanged 事件
  */
-func += (inout left: PropertyChange, right: ((String) -> Void))
+func += (inout left: PropertyChange, right: PropertyChangeParameter)
 {
     
-    left.append(left as AnyObject, method: right)
+    left.append(right)
 }
 
 /**
  * 使用 -= 取消註冊 PropertyChanged 事件
  */
-func -= (inout left: PropertyChange, right: ((String) -> Void))
+func -= (inout left: PropertyChange, right: PropertyChangeParameter)
 {
-    left.remove(left, method: right)
+    left.remove(right)
 }

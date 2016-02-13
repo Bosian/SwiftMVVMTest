@@ -10,25 +10,16 @@ import UIKit
 
 class MainViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
 
-    @IBOutlet weak var textField: UITextField!
-    @IBOutlet weak var textField2: UITextField!
     @IBOutlet weak var tableView: UITableView!
 
-    lazy var viewModel = MainViewModel()
+    private(set) var viewModel: MainViewModel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
-        dataContext = viewModel
+        dataContext = MainViewModel()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-        
-    }
-    
     // =============== Update Binding ===============
     
     override func updateViewFromViewModel(propertyName: String)
@@ -37,13 +28,9 @@ class MainViewController: BaseViewController, UITableViewDataSource, UITableView
         
         switch propertyName
         {
-            case "text":
-                self.textField.text = viewModel.text
-                self.textField2.text = viewModel.text
-                break
             case "dataItems":
                 
-                viewModel.dataItems.collectionChanged.append(self.tableView, method: collectionChanged)
+                viewModel.dataItems.collectionChanged.append(CollectionChangeParameter(view: self.tableView, method: collectionChanged))
                 
                 break
             default:
@@ -53,7 +40,6 @@ class MainViewController: BaseViewController, UITableViewDataSource, UITableView
     
     /**
      * When DataContext Changed then update all View
-     
      */
     override func updateAllViewWhenDataContextChanged(dataContext: AnyObject) {
         
@@ -70,49 +56,7 @@ class MainViewController: BaseViewController, UITableViewDataSource, UITableView
         }
     }
     
-    /**
-     * Update TableView
-     */
-    func collectionChanged(action: CollectionChangedAction, index: Int)
-    {
-        print("TableView Changed: \(index)")
-        
-        tableView.reloadData()
-    }
-
-    // =============== View event ===============
-    
-    @IBAction func buttonHandler(sender: UIButton) {
-        
-        viewModel.buttonHandler(sender)
-
-    }
-    
-    @IBAction func addItemHandler(sender: UIButton) {
-        
-        viewModel.addItemHandler(sender)
-    }
-    
-    @IBAction func removeItemHandler(sender: UIButton) {
-        
-        viewModel.removeItemHandler(sender)
-    }
-    
-    
-    @IBAction func textFieldChanged(sender: UITextField) {
-     
-        viewModel.text = sender.text
-    }
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        
-        return textField.resignFirstResponder()
-    }
-    
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        
-        self.view.endEditing(true)
-    }
+    // =============== TableView ===============
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
@@ -125,11 +69,23 @@ class MainViewController: BaseViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! BaseTableViewCell
         
-        cell.textLabel?.text = viewModel.dataItems[indexPath.row]
+        cell.dataContext = viewModel.dataItems[indexPath.row]
         
         return cell
     }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+
+        let cellViewModel = viewModel.dataItems[indexPath.row]
+        
+        guard let navigation = cellViewModel.navigation else {
+            return
+        }
+        
+        self.performSegueWithIdentifier(navigation, sender: nil)
+    }
+    
 }
 

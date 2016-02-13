@@ -13,10 +13,11 @@ protocol ValueConverterProtocol {
     /**
      * ViewModel to View
      */
-    func converter(value: AnyObject?, parameter: AnyObject?) -> AnyObject?
+    func convert(value: AnyObject?, parameter: AnyObject?) -> AnyObject?
     
     /**
      * View to ViewModel
      */
-    func backConverter(value: AnyObject?, parameter: AnyObject?) -> AnyObject?
+    func backConvert(value: AnyObject?, parameter: AnyObject?) -> AnyObject?
+    
 }

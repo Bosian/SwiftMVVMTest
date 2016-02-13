@@ -10,20 +10,21 @@ import UIKit
 
 class BaseTableViewCell: UITableViewCell, BindableDelegate, UITextFieldDelegate {
     
-    private var viewModel: BaseBindable?
-
-    var dataContext: AnyObject! {
+    private weak var viewModel: BaseBindable?
+    
+    weak var dataContext: AnyObject! {
         
-        willSet {
+        didSet {
             
-            if (dataContext !== newValue)
+            if dataContext !== oldValue
             {
-                self.dataContext = newValue
-                
-                if var viewModel = newValue as? NotifyPropertyChangedProtocol
+                guard let viewModel = dataContext as? BaseBindable else
                 {
-                    viewModel.propertyChanged += updateViewFromViewModel
+                    return
                 }
+                
+                viewModel.viewController = self
+                viewModel.propertyChanged += PropertyChangeParameter(sender: self, method: updateViewFromViewModel)
                 
                 updateAllViewWhenDataContextChanged(dataContext)
             }
@@ -34,10 +35,10 @@ class BaseTableViewCell: UITableViewCell, BindableDelegate, UITextFieldDelegate 
         super.awakeFromNib()
         // Initialization code
     }
-
+    
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
     
@@ -49,16 +50,17 @@ class BaseTableViewCell: UITableViewCell, BindableDelegate, UITextFieldDelegate 
         
         switch (propertyName)
         {
-            case "isUpdate":
-                
-                // StatusBar上的網路圖示動畫
-                let viewModel = dataContext as! BaseBindable
-                UIApplication.sharedApplication().networkActivityIndicatorVisible = viewModel.isUpdate
-                
-                break
-                
-            default:
-                break
+        case "isUpdate":
+            
+            let viewModel = dataContext as! BaseBindable
+            
+            // StatusBar上的網路圖示動畫
+            UIApplication.sharedApplication().networkActivityIndicatorVisible = viewModel.isUpdate
+            
+            break
+            
+        default:
+            break
             
         }
         
@@ -70,6 +72,62 @@ class BaseTableViewCell: UITableViewCell, BindableDelegate, UITextFieldDelegate 
         updateViewFromViewModel("isUpdate")
     }
     
+    // ========== UITableView, UIPickerView ==========
+    
+    /**
+    * ReloadView
+    */
+    func collectionChanged(view: UIView, action: CollectionChangedAction, index:Int)
+    {
+        if view is UITableView
+        {
+            collectionChangedForTableView(view as! UITableView, action: action, index: index)
+        }else if view is UIPickerView {
+            collectionChangedForPickerView(view as! UIPickerView, action: action, index: index)
+        }
+        
+    }
+    
+    /**
+     * ReloadUIPickerView
+     */
+    func collectionChangedForPickerView(pickerView: UIPickerView, action: CollectionChangedAction, index: Int)
+    {
+        pickerView.reloadAllComponents()
+    }
+    
+    /**
+     * 新增移除TableViewCell
+     */
+    func collectionChangedForTableView(tableView: UITableView, action: CollectionChangedAction, index: Int)
+    {
+        tableView.beginUpdates()
+        
+        switch action
+        {
+        case .Add:
+            
+            tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .Automatic)
+            
+            break
+            
+        case .Delete:
+            
+            tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .Automatic)
+            
+            break
+            
+        case .Update:
+            
+            tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .Automatic)
+            
+            break
+            
+        }
+        
+        tableView.endUpdates()
+    }
+    
     /**
      * 收鍵盤
      */
@@ -79,6 +137,6 @@ class BaseTableViewCell: UITableViewCell, BindableDelegate, UITextFieldDelegate 
         
         return true
     }
-
-
+    
+    
 }

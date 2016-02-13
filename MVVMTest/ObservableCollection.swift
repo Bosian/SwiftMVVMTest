@@ -45,6 +45,18 @@ class ObservableCollection<T>: NSObject, CollectionChangedProtocol {
         notifyCollectionChanged(CollectionChangedAction.Delete, index: index)
     }
     
+    func removeAll()
+    {
+        let count = collection.count
+        
+        collection.removeAll()
+        
+        for var f = count - 1; f >= 0; f--
+        {
+            notifyCollectionChanged(CollectionChangedAction.Delete, index: f)
+        }
+    }
+    
     func notifyCollectionChanged(action: CollectionChangedAction, index: Int)
     {
         print("\(action): \(index)")
@@ -53,7 +65,7 @@ class ObservableCollection<T>: NSObject, CollectionChangedProtocol {
     }
     
     subscript(index: Int) -> T
-    {
+        {
         get {
             return collection[index]
         }
