@@ -10,9 +10,9 @@ import UIKit
 
 class BaseViewController: UIViewController, BindableDelegate, UITextFieldDelegate {
     
-    private weak var viewModel: BaseViewModel?
+    private var viewModel: BaseViewModel?
     
-    weak var dataContext: AnyObject! {
+    var dataContext: AnyObject! {
         
         didSet {
             
@@ -25,7 +25,6 @@ class BaseViewController: UIViewController, BindableDelegate, UITextFieldDelegat
                 
                 viewModel.viewController = self
                 viewModel.propertyChanged += PropertyChangeParameter(sender: self, method: updateViewFromViewModel)
-                
                 updateAllViewWhenDataContextChanged(dataContext)
             }
         }
@@ -50,7 +49,11 @@ class BaseViewController: UIViewController, BindableDelegate, UITextFieldDelegat
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        viewModel?.viewWillAppear(animated)
+        if let viewModel = viewModel
+        {
+            viewModel.propertyChanged += PropertyChangeParameter(sender: self, method: updateViewFromViewModel)
+            viewModel.viewWillAppear(animated)
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -60,9 +63,14 @@ class BaseViewController: UIViewController, BindableDelegate, UITextFieldDelegat
     }
     
     override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(animated)
         
-        viewModel?.viewDidDisappear(animated)
+        if let viewModel = viewModel
+        {
+            viewModel.propertyChanged -= PropertyChangeParameter(sender: self, method: updateViewFromViewModel)
+            viewModel.viewDidDisappear(animated)
+        }
+        
+        super.viewDidDisappear(animated)
     }
     
     override func didReceiveMemoryWarning() {

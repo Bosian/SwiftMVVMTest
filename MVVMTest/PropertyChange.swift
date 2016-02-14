@@ -20,7 +20,7 @@ class PropertyChange
     /**
      * 由於Swift 無法使用method type互相做比較，所以多傳入一個 instance進行比較
      */
-    private lazy var instanceArray = [Weak<AnyObject>]()
+    private lazy var instanceArray = [AnyObject]()
     
     func append(parameter: PropertyChangeParameter)
     {
@@ -33,7 +33,7 @@ class PropertyChange
             return
         }
         
-        instanceArray.append(Weak<AnyObject>(value: instance))
+        instanceArray.append(instance)
         propertyChanged.append(receiver)
     }
     
@@ -71,7 +71,7 @@ class PropertyChangeParameter : NSObject {
     
     typealias listener = (String) -> Void
     
-    weak var sender: AnyObject?
+    var sender: AnyObject
     var method: listener
     
     init(sender: AnyObject, method: listener) {
