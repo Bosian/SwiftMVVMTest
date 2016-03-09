@@ -10,9 +10,9 @@ import UIKit
 
 class BaseViewController: UIViewController, BindableDelegate, UITextFieldDelegate {
     
-    private var viewModel: BaseViewModel?
+    private var viewModel: BaseViewModel!
     
-    var dataContext: AnyObject! {
+    var dataContext: NotifyPropertyChangedProtocol! {
         
         didSet {
             
@@ -24,36 +24,68 @@ class BaseViewController: UIViewController, BindableDelegate, UITextFieldDelegat
                 }
                 
                 viewModel.viewController = self
-                viewModel.propertyChanged += PropertyChangeParameter(sender: self, method: updateViewFromViewModel)
-                updateAllViewWhenDataContextChanged(dataContext)
+                viewModel.propertyChanged += PropertyChangeParameter(sender: self, method: { [unowned self] (viewModel, propertyName) -> Void in
+                    self.updateViewFromViewModel(viewModel, propertyName)
+                    })
+                
+                dataContextChanged(dataContext)
+                updateAllView(dataContext)
             }
         }
     }
     
+    /**
+     * ViewDidLoad是否已被呼叫 (因為Base被呼叫ViewDidLoad時，ViewModel還是nil，用於之後補Call)
+     */
+    var isViewDidLoadBeCallWhenDataContextIsNil: Bool = false
+    
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillEnterForegroundNotification, object: nil)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidEnterBackgroundNotification, object: nil)
         
+        #if DEBUG
+            
+            print("deinit...\(self.dynamicType)")
+            
+        #endif
+        
+        let notificationCenter = NSNotificationCenter.defaultCenter()
+        
+        // 鍵盤
+        notificationCenter.removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
+        notificationCenter.removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
+        
+        // App進入背景或進入前景時觸發事件
+        notificationCenter.removeObserver(self, name: UIApplicationWillEnterForegroundNotification, object: nil)
+        notificationCenter.removeObserver(self, name: UIApplicationDidEnterBackgroundNotification, object: nil)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // App進入背景或進入前景時觸發事件
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "viewWillAppear:", name: UIApplicationWillEnterForegroundNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "viewDidDisappear:", name: UIApplicationDidEnterBackgroundNotification, object: nil)
+        let notificationCenter = NSNotificationCenter.defaultCenter()
         
-        viewModel?.viewDidLoad()
+        // App進入背景或進入前景時觸發事件
+        notificationCenter.addObserver(self, selector: "viewWillAppear:", name: UIApplicationWillEnterForegroundNotification, object: nil)
+        notificationCenter.addObserver(self, selector: "viewDidDisappear:", name: UIApplicationDidEnterBackgroundNotification, object: nil)
+        
+        // 鍵盤
+        notificationCenter.addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
+        notificationCenter.addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+        
+        if let viewModel = viewModel
+        {
+            viewModel.viewDidLoad()
+        }
+        else
+        {
+            // 需補Call ViewDidLoad
+            isViewDidLoadBeCallWhenDataContextIsNil = true
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        if let viewModel = viewModel
-        {
-            viewModel.propertyChanged += PropertyChangeParameter(sender: self, method: updateViewFromViewModel)
-            viewModel.viewWillAppear(animated)
-        }
+        viewModel?.viewWillAppear(animated)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -64,11 +96,7 @@ class BaseViewController: UIViewController, BindableDelegate, UITextFieldDelegat
     
     override func viewDidDisappear(animated: Bool) {
         
-        if let viewModel = viewModel
-        {
-            viewModel.propertyChanged -= PropertyChangeParameter(sender: self, method: updateViewFromViewModel)
-            viewModel.viewDidDisappear(animated)
-        }
+        viewModel?.viewDidDisappear(animated)
         
         super.viewDidDisappear(animated)
     }
@@ -95,32 +123,51 @@ class BaseViewController: UIViewController, BindableDelegate, UITextFieldDelegat
     
     // === Update View ===
     
-    func updateViewFromViewModel(propertyName: String)
+    func updateViewFromViewModel(dataContext: NotifyPropertyChangedProtocol, _ propertyName: String)
     {
-        print("UpdateView: \(propertyName)")
+        #if DEBUG
+            let viewModelMirror = Mirror(reflecting: viewModel)
+            
+            print("UpdateView: \(self.dynamicType) << \(viewModelMirror.subjectType).\(propertyName)")
+        #endif
         
         switch (propertyName)
         {
-        case "isUpdate":
+            case "isUpdate":
             
-            let viewModel = dataContext as! BaseViewModel
-            
-            // StatusBar上的網路圖示動畫
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = viewModel.isUpdate
-            
-            break
-            
-        default:
-            break
-            
+                // StatusBar上的網路圖示動畫
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = viewModel.isUpdate
+                
+                break
+                
+            default:
+                break
+                
         }
         
     }
     
-    func updateAllViewWhenDataContextChanged(dataContext: AnyObject) {
-        viewModel = dataContext as? BaseViewModel
+    func dataContextChanged(dataContext: NotifyPropertyChangedProtocol) {
+        viewModel = dataContext as! BaseViewModel
         
-        updateViewFromViewModel("isUpdate")
+        // 是否需要補Call ViewDidLoad
+        if isViewDidLoadBeCallWhenDataContextIsNil
+        {
+            viewModel?.viewDidLoad()
+        }
+    }
+    
+    func updateAllView(dataContext: NotifyPropertyChangedProtocol) {
+        
+        updateViewFromViewModel(dataContext, "isUpdate")
+        
+        let mirrorForViewModel = Mirror(reflecting: dataContext)
+        
+        // 更新ViewModel中對應到的View
+        for (label, _) in mirrorForViewModel.children
+        {
+            updateViewFromViewModel(dataContext, label!)
+        }
     }
     
     // ========== UITableView, UIPickerView ==========
@@ -145,6 +192,47 @@ class BaseViewController: UIViewController, BindableDelegate, UITextFieldDelegat
     func collectionChangedForPickerView(pickerView: UIPickerView, action: CollectionChangedAction, index: Int)
     {
         pickerView.reloadAllComponents()
+    }
+    
+    /**
+     * 鍵盤將顯示
+     */
+    func keyboardWillShow(notification: NSNotification)
+    {
+        //        guard self.view.frame.origin.y >= 0 else {
+        //            return
+        //        }
+        //
+        //        guard let userInfo = notification.userInfo else {
+        //            return
+        //        }
+        //
+        //        guard let keyboardSize = (userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() else {
+        //            return
+        //        }
+        //
+        //        UIView.animateWithDuration(0.5) { [unowned self] () -> Void in
+        //
+        //            self.view.center.y -= keyboardSize.size.height
+        //        }
+        //
+        //        self.view.layoutIfNeeded()
+    }
+    
+    /**
+     * 鍵盤將隱藏
+     */
+    func keyboardWillHide(notification: NSNotification)
+    {
+        //        var frame = self.view.frame
+        //        frame.origin.y = 0
+        //
+        //        UIView.animateWithDuration(1.0) { [unowned self] () -> Void in
+        //
+        //            self.view.frame = frame
+        //        }
+        //
+        //        self.view.layoutIfNeeded()
     }
     
     /**
@@ -182,8 +270,8 @@ class BaseViewController: UIViewController, BindableDelegate, UITextFieldDelegat
     // ========== UI Event ==========
     
     /**
-    * 收鍵盤
-    */
+     * 收鍵盤
+     */
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.endEditing(true)
     }
@@ -196,14 +284,6 @@ class BaseViewController: UIViewController, BindableDelegate, UITextFieldDelegat
         textField.resignFirstResponder()
         
         return true
-    }
-    
-    /**
-     * 回首頁
-     */
-    @IBAction func homeHandler(sender: UIBarButtonItem)
-    {
-        self.navigationController?.popToRootViewControllerAnimated(true)
     }
     
 }

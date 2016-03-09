@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol NotifyPropertyChangedProtocol
+protocol NotifyPropertyChangedProtocol: class
 {
     /**
      * 給View註冊屬性變更

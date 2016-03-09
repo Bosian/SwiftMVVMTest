@@ -13,27 +13,34 @@ import UIKit
  */
 class PropertyChange
 {
-    typealias listener = (String) -> Void
+    typealias listener = (NotifyPropertyChangedProtocol, String) -> Void
     
-    private lazy var propertyChanged = [listener]()
+    weak var sender: NotifyPropertyChangedProtocol?
+    
+    private var propertyChanged = [listener]()
     
     /**
      * 由於Swift 無法使用method type互相做比較，所以多傳入一個 instance進行比較
      */
-    private lazy var instanceArray = [AnyObject]()
+    private var instanceArray: [Weak<AnyObject>] = []
+    
+    init(sender: NotifyPropertyChangedProtocol?)
+    {
+        self.sender = sender
+    }
     
     func append(parameter: PropertyChangeParameter)
     {
-        let instance = parameter.sender
+        weak var sender = parameter.sender
         let receiver = parameter.method
         
         // 防止加入同一個instance
-        guard instanceArray.indexOf({$0 === instance}) == nil else
+        guard instanceArray.indexOf({$0.value === sender}) == nil else
         {
             return
         }
         
-        instanceArray.append(instance)
+        instanceArray.append(Weak<AnyObject>(value: sender))
         propertyChanged.append(receiver)
     }
     
@@ -43,9 +50,9 @@ class PropertyChange
      */
     func remove(parameter: PropertyChangeParameter)
     {
-        let instance = parameter.sender
+        let sender = parameter.sender
         
-        if let index = instanceArray.indexOf({ $0 === instance})
+        if let index = instanceArray.indexOf({ $0.value === sender})
         {
             instanceArray.removeAtIndex(index)
             propertyChanged.removeRange(index...index)
@@ -57,11 +64,35 @@ class PropertyChange
      */
     func invoke(propertyName: String)
     {
+        guard let sender = sender else {
+            
+            #if DEBUG
+                print("\r\n\r\nsender是空的: \(self.dynamicType).propertyName")
+            #endif
+            
+            return
+        }
+        
+        removeIfEmpty()
+        
         for method in propertyChanged
         {
-            method(propertyName)
+            method(sender, propertyName)
         }
     }
+    
+    /**
+     * 移除已被釋放的EventHandler
+     */
+    func removeIfEmpty()
+    {
+        if let index = instanceArray.indexOf({ $0.value == nil})
+        {
+            instanceArray.removeAtIndex(index)
+            propertyChanged.removeRange(index...index)
+        }
+    }
+    
 }
 
 /**
@@ -69,12 +100,12 @@ class PropertyChange
  */
 class PropertyChangeParameter : NSObject {
     
-    typealias listener = (String) -> Void
+    typealias listener = (NotifyPropertyChangedProtocol, String) -> Void
     
-    var sender: AnyObject
+    weak var sender: AnyObject?
     var method: listener
     
-    init(sender: AnyObject, method: listener) {
+    init(sender: AnyObject?, method: listener) {
         
         self.sender = sender
         self.method = method

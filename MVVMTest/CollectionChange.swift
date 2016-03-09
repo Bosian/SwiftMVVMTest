@@ -15,25 +15,25 @@ class CollectionChange
 {
     typealias listener = (UIView, action: CollectionChangedAction, index: Int) -> Void
     
-    private lazy var propertyChanged = [listener]()
+    private var propertyChanged = [listener]()
     
     /**
      * 由於Swift 無法使用method type互相做比較，所以多傳入一個 instance進行比較
      */
-    private lazy var instanceArray = [UIView?]()
+    private var instanceArray: [Weak<UIView>] = []
     
     func append(parameter: CollectionChangeParameter)
     {
-        let instance = parameter.view
+        let sender = parameter.view
         let receiver = parameter.receiver
         
         // 防止加入同一個instance
-        guard instanceArray.indexOf({$0 === instance}) == nil else
+        guard instanceArray.indexOf({$0.value === sender}) == nil else
         {
             return
         }
         
-        instanceArray.append(instance)
+        instanceArray.append(Weak<UIView>(value: sender))
         propertyChanged.append(receiver)
     }
     
@@ -43,9 +43,9 @@ class CollectionChange
      */
     func remove(parameter: CollectionChangeParameter)
     {
-        let instance = parameter.view
+        let sender = parameter.view
         
-        if let index = instanceArray.indexOf({ $0 === instance})
+        if let index = instanceArray.indexOf({ $0.value === sender})
         {
             instanceArray.removeAtIndex(index)
             propertyChanged.removeRange(index...index)
@@ -57,13 +57,27 @@ class CollectionChange
      */
     func invoke(action: CollectionChangedAction, index: Int)
     {
+        removeIfEmpty()
+        
         for (f, method) in propertyChanged.enumerate()
         {
-            guard let view = instanceArray[f] else {
+            guard let view = instanceArray[f].value else {
                 continue
             }
             
-            method(view , action: action, index: index)
+            method( view, action: action, index: index)
+        }
+    }
+    
+    /**
+     * 移除已被釋放的EventHandler
+     */
+    func removeIfEmpty()
+    {
+        if let index = instanceArray.indexOf({ $0.value == nil})
+        {
+            instanceArray.removeAtIndex(index)
+            propertyChanged.removeRange(index...index)
         }
     }
 }
@@ -72,7 +86,7 @@ class CollectionChangeParameter : NSObject
 {
     typealias listener = (UIView, action: CollectionChangedAction, index: Int) -> Void
     
-    weak var view: UIView?
+    var view: UIView
     var receiver: listener
     
     init(view: UIView, method receiver: listener) {
