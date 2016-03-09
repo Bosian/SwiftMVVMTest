@@ -24,12 +24,12 @@ class BaseViewModel: NSObject, NotifyPropertyChangedProtocol {
     /**
      * viewController
      */
-    weak var viewController: BaseViewController!
+    weak var viewController: UIViewController!
     
     /**
      * 給View註冊屬性變更
      */
-    var propertyChanged = PropertyChange()
+    var propertyChanged = PropertyChange(sender: nil)
     
     /**
      * 通知View，屬性變更
@@ -40,6 +40,29 @@ class BaseViewModel: NSObject, NotifyPropertyChangedProtocol {
     }
     
     // === ViewController Event ===
+    
+    override init() {
+        
+        #if DEBUG
+            
+            print("init...\(self.dynamicType)")
+            
+        #endif
+        
+        super.init()
+        
+        propertyChanged.sender = self
+    }
+    
+    
+    deinit {
+        
+        #if DEBUG
+            
+            print("deinit...\(self.dynamicType)")
+            
+        #endif
+    }
     
     func viewDidLoad() {
         

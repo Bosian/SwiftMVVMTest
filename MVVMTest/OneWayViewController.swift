@@ -28,9 +28,9 @@ class OneWayViewController: BaseViewController {
     
     // =============== Update Binding ===============
     
-    override func updateViewFromViewModel(propertyName: String)
+    override func updateViewFromViewModel(dataContext: NotifyPropertyChangedProtocol, _ propertyName: String)
     {
-        super.updateViewFromViewModel(propertyName)
+        super.updateViewFromViewModel(dataContext, propertyName)
         
         switch propertyName
         {
@@ -51,19 +51,10 @@ class OneWayViewController: BaseViewController {
     /**
      * When DataContext Changed then update all View
      */
-    override func updateAllViewWhenDataContextChanged(dataContext: AnyObject) {
-        
-        super.updateAllViewWhenDataContextChanged(dataContext)
+    override func dataContextChanged(dataContext: NotifyPropertyChangedProtocol) {
+        super.dataContextChanged(dataContext)
         
         viewModel = dataContext as! OneWayViewModel
-        
-        let mirror = Mirror(reflecting: viewModel)
-        
-        // 更新ViewModel中對應到的View
-        for (label, _) in mirror.children
-        {
-            updateViewFromViewModel(label!)
-        }
     }
     
     

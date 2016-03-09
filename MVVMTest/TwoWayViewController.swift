@@ -19,7 +19,6 @@ class TwoWayViewController: BaseViewController {
     private(set) var viewModel: TwoWayViewModel!
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         
         dataContext = TwoWayViewModel()
@@ -28,9 +27,9 @@ class TwoWayViewController: BaseViewController {
     
     // =============== Update Binding ===============
     
-    override func updateViewFromViewModel(propertyName: String)
+    override func updateViewFromViewModel(dataContext: NotifyPropertyChangedProtocol, _ propertyName: String)
     {
-        super.updateViewFromViewModel(propertyName)
+        super.updateViewFromViewModel(dataContext, propertyName)
         
         switch propertyName
         {
@@ -48,21 +47,12 @@ class TwoWayViewController: BaseViewController {
     /**
      * When DataContext Changed then update all View
      */
-    override func updateAllViewWhenDataContextChanged(dataContext: AnyObject) {
-        
-        super.updateAllViewWhenDataContextChanged(dataContext)
+    override func dataContextChanged(dataContext: NotifyPropertyChangedProtocol)
+    {
+        super.dataContextChanged(dataContext)
         
         viewModel = dataContext as! TwoWayViewModel
-        
-        let mirror = Mirror(reflecting: viewModel)
-        
-        // 更新ViewModel中對應到的View
-        for (label, _) in mirror.children
-        {
-            updateViewFromViewModel(label!)
-        }
     }
-    
     
     // =============== View event ===============
     

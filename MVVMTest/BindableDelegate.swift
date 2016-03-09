@@ -10,11 +10,13 @@ import UIKit
 
 protocol BindableDelegate {
     
-    var dataContext: AnyObject! { get set }
+    var dataContext: NotifyPropertyChangedProtocol! { get set }
     
-    func updateViewFromViewModel(propertyName: String)
+    func updateViewFromViewModel(dataContext: NotifyPropertyChangedProtocol, _ propertyName: String)
     
-    func updateAllViewWhenDataContextChanged(dataContext: AnyObject)
+    func dataContextChanged(dataContext: NotifyPropertyChangedProtocol)
+    
+    func updateAllView(dataContext: NotifyPropertyChangedProtocol)
     
     func collectionChanged(view: UIView, action: CollectionChangedAction, index:Int)
 }

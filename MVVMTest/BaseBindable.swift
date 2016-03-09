@@ -10,9 +10,10 @@ import UIKit
 
 class BaseBindable: NSObject, NotifyPropertyChangedProtocol {
     
-    /**
-     * 是否正在更新
-     */
+    weak var viewController: AnyObject?
+    
+    var propertyChanged = PropertyChange(sender: nil)
+    
     var isUpdate: Bool = false {
         didSet {
             if (isUpdate != oldValue) {
@@ -21,12 +22,27 @@ class BaseBindable: NSObject, NotifyPropertyChangedProtocol {
         }
     }
     
-    /**
-     * viewController
-     */
-    weak var viewController: AnyObject?
+    override init() {
+        
+        #if DEBUG
+            
+            print("init...\(self.dynamicType)")
+            
+        #endif
+        
+        super.init()
+        
+        propertyChanged.sender = self
+    }
     
-    var propertyChanged = PropertyChange()
+    deinit {
+        
+        #if DEBUG
+            
+            print("deinit...\(self.dynamicType)")
+            
+        #endif
+    }
     
     func notifyPropertyChanged(propertyName: String = __FUNCTION__) {
         

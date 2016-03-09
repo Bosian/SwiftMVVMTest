@@ -10,9 +10,11 @@ import UIKit
 
 class BaseTableViewCell: UITableViewCell, BindableDelegate, UITextFieldDelegate {
     
-    private weak var viewModel: BaseBindable?
+    private var viewModel: BaseBindable!
+    weak var pageViewController: BaseViewController!
+    weak var tableView: UITableView!
     
-    weak var dataContext: AnyObject! {
+    var dataContext: NotifyPropertyChangedProtocol! {
         
         didSet {
             
@@ -23,10 +25,15 @@ class BaseTableViewCell: UITableViewCell, BindableDelegate, UITextFieldDelegate 
                     return
                 }
                 
+                self.tableView = self.superview?.superview as! UITableView
+                self.pageViewController = self.tableView.delegate as! BaseViewController
                 viewModel.viewController = self
-                viewModel.propertyChanged += PropertyChangeParameter(sender: self, method: updateViewFromViewModel)
+                viewModel.propertyChanged += PropertyChangeParameter(sender: self, method: { [weak self] (viewModel, propertyName) -> Void in
+                    self?.updateViewFromViewModel(viewModel, propertyName)
+                })
                 
-                updateAllViewWhenDataContextChanged(dataContext)
+                dataContextChanged(dataContext)
+                updateAllView(dataContext)
             }
         }
     }
@@ -42,41 +49,101 @@ class BaseTableViewCell: UITableViewCell, BindableDelegate, UITextFieldDelegate 
         // Configure the view for the selected state
     }
     
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        #if DEBUG
+            print("init...style:reuseIdentifier: \(self.dynamicType)")
+        #endif
+        
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        
+        #if DEBUGK
+            print("init...coder:\(self.dynamicType)")
+        #endif
+        
+        super.init(coder: aDecoder)
+    }
+    
+    deinit {
+        
+        #if DEBUG
+            
+            print("deinit...\(self.dynamicType)")
+            
+        #endif
+        
+        ignoreFrameChanges()
+    }
+    
     // === Update View ===
     
-    func updateViewFromViewModel(propertyName: String)
+    func updateViewFromViewModel(dataContext: NotifyPropertyChangedProtocol, _ propertyName: String)
     {
-        print("UpdateView: \(propertyName)")
+        #if DEBUG
+            let viewModelMirror = Mirror(reflecting: viewModel)
+            
+            print("UpdateView: \(self.dynamicType) << \(viewModelMirror.subjectType).\(propertyName)")
+        #endif
         
         switch (propertyName)
         {
-        case "isUpdate":
-            
-            let viewModel = dataContext as! BaseBindable
-            
-            // StatusBar上的網路圖示動畫
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = viewModel.isUpdate
-            
-            break
-            
-        default:
-            break
+            case "isUpdate":
+                
+                guard let viewModel = dataContext as? BaseViewModel else {
+                    return
+                }
+                
+                // StatusBar上的網路圖示動畫
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = viewModel.isUpdate
+                
+            default:
+                break
             
         }
         
     }
     
-    func updateAllViewWhenDataContextChanged(dataContext: AnyObject) {
-        viewModel = dataContext as? BaseBindable
+    func dataContextChanged(dataContext: NotifyPropertyChangedProtocol) {
+        viewModel = dataContext as! BaseBindable
+    }
+    
+    func updateAllView(dataContext: NotifyPropertyChangedProtocol) {
         
-        updateViewFromViewModel("isUpdate")
+        updateViewFromViewModel(dataContext, "isUpdate")
+        
+        let mirrorForViewModel = Mirror(reflecting: dataContext)
+        
+        // 更新ViewModel中對應到的View
+        for (label, _) in mirrorForViewModel.children
+        {
+            updateViewFromViewModel(dataContext, label!)
+        }
     }
     
     // ========== UITableView, UIPickerView ==========
     
+    func watchFrameChanges()
+    {
+        addObserver(self, forKeyPath: "frame", options: .Initial, context: nil)
+    }
+    
+    func ignoreFrameChanges()
+    {
+        if (self.observationInfo != nil )
+        {
+            removeObserver(self, forKeyPath: "frame")
+        }
+    }
+    
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        
+    }
+    
     /**
-    * ReloadView
-    */
+     * ReloadView
+     */
     func collectionChanged(view: UIView, action: CollectionChangedAction, index:Int)
     {
         if view is UITableView
